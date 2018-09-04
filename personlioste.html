@@ -36,29 +36,24 @@
         #modal {
             width: 100vw;
             height: 100vh;
-            position: fixed;
             background-color: rgba(0, 0, 0, .7);
+            position: fixed;
             text-align: center;
-            /** skjuler den **/
             display: none;
-
         }
 
         #modal-content {
             width: 70vw;
-            height: 70vh;
-            background-color: rgba(250, 250, 250, 1);
+            background-color: rgba(250, 250, 250, .7);
             margin: auto;
+            width: 70vh;
+
 
         }
 
-        #modal.vis {
+        .vis {
             display: block;
-
         }
-
-        #modal img {}
-
     </style>
 </head>
 
@@ -67,7 +62,7 @@
     <section id="modal">
         <button>Close</button>
         <div id="modal-content">
-            <h2 class="modal-navn"></h2>
+            <h2 class="modeal-navn"></h2>
             <img class="modal-billede" src="" alt="">
         </div>
     </section>
@@ -82,87 +77,71 @@
         </nav>
 
     </header>
-    <main class="container">
-        <section class="data-container"></section>
-    </main>
+    <section class="data-container"></section>
+
     <template class="data-template">
-        <article class="person">
+        <article>
+
             <h2></h2>
-            <img src="" alt=""><br>
-            status: <span class="data-civilstatus"></span><br>
+            <p class="data-github"></p>
+            <p class="data-web"></p>
+            <p class="data-mail"></p>
+            <p class="data-adresse"></p>
+            <p class="data-alder"></p>
+            <p class="data-civilstatus"></p>
+            <p class="data-tlf"></p>
+            <p class="data-facebook"></p>
+            <p class="data-hobby"></p>
+            <p class="data-sex"></p>
+            <img src="" alt="">
+
+
         </article>
     </template>
 
     <script>
-        let dest = document.querySelector(".data-container"),
-            personer,
-            civilFilter = "alle";
         document.addEventListener("DOMContentLoaded", hentJson);
-
+        let personer;
         async function hentJson() {
             let myJson = await fetch("personliste.json");
             personer = await myJson.json();
-            console.log(personer)
-            personer.sort((a, b) => {
-                return a.alder - b.alder
-            });
-            console.log(personer)
-            visPersoner();
-        }
-
-        document.querySelectorAll(".menu-item").forEach(knap => {
-            knap.addEventListener("click", filtrering)
-        });
-
-        function filtrering() {
-            dest.textContent = "";
-            civilFilter = this.getAttribute("data-civilstatus");
+            console.log(personer[0].navn);
             visPersoner();
         }
 
         function visPersoner() {
-
-
+            let modtager = document.querySelector(".data-container");
             let temp = document.querySelector(".data-template");
-            document.querySelector("header h1").textContent = civilFilter;
+            //løb personer igennem og lav en klon
             personer.forEach(person => {
-                if (personer.civilstatus == civilFilter || civilFilter == "alle") {
                     let klon = temp.cloneNode(true).content;
+                    //indsæt data i html
                     klon.querySelector("h2").textContent = person.navn;
-                    klon.querySelector("img").src = person.billede;
-                    klon.querySelector("img").addEventListener("click", () => {
-                        window.location.href = "single.html?github=" + person.github;
-                    });
-
-
+                    klon.querySelector(".data-github").textContent = person.github;
+                    klon.querySelector(".data-web").textContent = person.web;
+                    klon.querySelector(".data-mail").textContent = person.mail;
+                    klon.querySelector(".data-adresse").textContent = person.adresse;
+                    klon.querySelector(".data-alder").textContent = person.alder;
                     klon.querySelector(".data-civilstatus").textContent = person.civilstatus;
-                    //placer klon i DOM
-                    dest.appendChild(klon);
-                }
+                    klon.querySelector(".data-tlf").textContent = person.tlf;
+                    klon.querySelector(".data-facebook").textContent = person.facebook;
+                    klon.querySelector(".data-hobby").textContent = person.hobby;
+                    klon.querySelector(".data-sex").textContent = person.sex;
+                    klon.querySelector(".data-sex").src = person.sex;
+                    klon.querySelector("img").src = person.billede;
+                    klon.querySelector("img").addEventListener("click", () => ) {
+                        visModal();
+                    }); modtager.appendChild(klon);
+                // placer klin i html
             })
         }
 
-        function visModal(personen) {
 
-            let modal = document.querySelector("#modal");
-            modal.classList.add("vis");
-            modal.querySelector(".modal-navn").textContent = personen.navn;
-            modal.querySelector(".modal-billede").src = personen.billede;
-            modal.querySelector(".modal-billede").al = "Foto af" + personen.navn;
-            modal.querySelector("button").addEventListener("click", skjulModal);
+        function visModal() {
+            document.querySelector("#modal").classList.add("vis")
         }
-
-        function skjulModal() {
-            modal.classList.remove("vis");
-            //window.scrollTo(0);
-        }
-
-        //           modal.querySelector("button").addEventListener("click", () => {
-        //                modal.classList.remove("vis");
-        //        });
-        //       }
-
     </script>
+
 </body>
 
 </html>

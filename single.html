@@ -29,7 +29,7 @@
                 padding-left: 10%;
                 padding-right: 10%;
                 grid-gap: 5px;
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(1, 1fr);
             }
         }
 
@@ -56,9 +56,6 @@
             display: block;
 
         }
-
-        #modal img {}
-
     </style>
 </head>
 
@@ -76,24 +73,37 @@
 
         <h1></h1>
         <nav>
-            <button class="menu-item" data-civilstatus="alle">Alle personer</button>
-            <button class="menu-item" data-civilstatus="single">Singler</button>
-            <button class="menu-item" data-civilstatus="optaget">I forhold</button>
+
         </nav>
 
     </header>
     <main class="container">
-        <section class="data-container"></section>
+        <section class="data-container">
+
+            <article class="person">
+                <h2>HEj</h2>
+                <img src="" alt=""><br>
+                status: <span class="data-civilstatus"></span><br>
+                github: <span class="data-github"></span><br>
+                tlf: <span class="data-tlf"></span><br>
+
+
+            </article>
+
+
+
+
+        </section>
     </main>
     <template class="data-template">
-        <article class="person">
-            <h2></h2>
-            <img src="" alt=""><br>
-            status: <span class="data-civilstatus"></span><br>
-        </article>
+
     </template>
 
     <script>
+        let urlParams = new URLSearchParams(window.location.search);
+        let github = urlParams.get("github");
+        console.log(github);
+
         let dest = document.querySelector(".data-container"),
             personer,
             civilFilter = "alle";
@@ -117,51 +127,27 @@
         function filtrering() {
             dest.textContent = "";
             civilFilter = this.getAttribute("data-civilstatus");
-            visPersoner();
+            visPerson();
         }
+
 
         function visPersoner() {
 
 
-            let temp = document.querySelector(".data-template");
-            document.querySelector("header h1").textContent = civilFilter;
             personer.forEach(person => {
-                if (personer.civilstatus == civilFilter || civilFilter == "alle") {
-                    let klon = temp.cloneNode(true).content;
-                    klon.querySelector("h2").textContent = person.navn;
-                    klon.querySelector("img").src = person.billede;
-                    klon.querySelector("img").addEventListener("click", () => {
-                        window.location.href = "single.html?github=" + person.github;
-                    });
+                if (person.github == github) {
+
+                    dest.querySelector("h2").textContent = person.navn;
+                    dest.querySelector("img").src = person.billede;
 
 
-                    klon.querySelector(".data-civilstatus").textContent = person.civilstatus;
+
+                    dest.querySelector(".data-civilstatus").textContent = person.civilstatus;
                     //placer klon i DOM
-                    dest.appendChild(klon);
+
                 }
             })
         }
-
-        function visModal(personen) {
-
-            let modal = document.querySelector("#modal");
-            modal.classList.add("vis");
-            modal.querySelector(".modal-navn").textContent = personen.navn;
-            modal.querySelector(".modal-billede").src = personen.billede;
-            modal.querySelector(".modal-billede").al = "Foto af" + personen.navn;
-            modal.querySelector("button").addEventListener("click", skjulModal);
-        }
-
-        function skjulModal() {
-            modal.classList.remove("vis");
-            //window.scrollTo(0);
-        }
-
-        //           modal.querySelector("button").addEventListener("click", () => {
-        //                modal.classList.remove("vis");
-        //        });
-        //       }
-
     </script>
 </body>
 

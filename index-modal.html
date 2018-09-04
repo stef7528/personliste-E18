@@ -40,7 +40,9 @@
             background-color: rgba(0, 0, 0, .7);
             text-align: center;
             /** skjuler den **/
-            display: none;
+            transition: 1s;
+            opacity: 0;
+            pointer-events: none;
 
         }
 
@@ -53,12 +55,15 @@
         }
 
         #modal.vis {
-            display: block;
-
+            /*display: block;*/
+            opacity: 1;
         }
 
-        #modal img {}
+        #modal img {
 
+            max-width: 350px;
+            pointer-events: all;
+        }
     </style>
 </head>
 
@@ -97,6 +102,7 @@
         let dest = document.querySelector(".data-container"),
             personer,
             civilFilter = "alle";
+        let modal = document.querySelector("#modal")
         document.addEventListener("DOMContentLoaded", hentJson);
 
         async function hentJson() {
@@ -121,8 +127,6 @@
         }
 
         function visPersoner() {
-
-
             let temp = document.querySelector(".data-template");
             document.querySelector("header h1").textContent = civilFilter;
             personer.forEach(person => {
@@ -131,7 +135,7 @@
                     klon.querySelector("h2").textContent = person.navn;
                     klon.querySelector("img").src = person.billede;
                     klon.querySelector("img").addEventListener("click", () => {
-                        window.location.href = "single.html?github=" + person.github;
+                        visModal(person);
                     });
 
 
@@ -143,25 +147,18 @@
         }
 
         function visModal(personen) {
-
-            let modal = document.querySelector("#modal");
             modal.classList.add("vis");
             modal.querySelector(".modal-navn").textContent = personen.navn;
             modal.querySelector(".modal-billede").src = personen.billede;
-            modal.querySelector(".modal-billede").al = "Foto af" + personen.navn;
+            modal.querySelector(".modal-billede").alt = "Foto af " + personen.navn;
             modal.querySelector("button").addEventListener("click", skjulModal);
+
         }
 
         function skjulModal() {
-            modal.classList.remove("vis");
             //window.scrollTo(0);
+            modal.classList.remove("vis");
         }
-
-        //           modal.querySelector("button").addEventListener("click", () => {
-        //                modal.classList.remove("vis");
-        //        });
-        //       }
-
     </script>
 </body>
 
