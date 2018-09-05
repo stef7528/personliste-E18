@@ -1,123 +1,126 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Hent JSON</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Babushka</title>
+
     <style>
-        body {
-            background-color: rgb(240, 240, 240);
+        html {
             margin: 0;
         }
 
-        article {
-            padding: 1em;
-            background-color: white;
+        header {
+            background-color: rgba(250, 147, 9, 0.76);
         }
 
-        .data-container article img {
-            width: 100%;
-        }
-
-        .data-container {
+        body {
+            font-family: , sans-serif;
             margin: 0 auto;
-            display: grid;
+            text-align: center;
         }
 
-        @media screen and (min-width:580px) {
-            .data-container {
-                padding-left: 10%;
-                padding-right: 10%;
-                grid-gap: 5px;
-                grid-template-columns: repeat(1, 1fr);
+        h1 {
+            text-transform: capitalize;
+            font-family: sans-serif;
+            text-align: center;
+        }
+
+        h3 {
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 50px;
+            margin: 0;
+            color: white;
+        }
+
+        nav {
+            text-align: center;
+        }
+
+        .menu-item {
+            text-transform: uppercase;
+            font-family: sans-serif;
+            background-color: rgba(250, 147, 9, 0.76);
+            color: white;
+        }
+
+        .button {}
+
+        .retContainer {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        @media only screen and (max-width: 1229px) {
+            .retContainer {
+                grid-template-columns: 1fr 1fr;
             }
         }
 
-        #modal {
-            width: 100vw;
-            height: 100vh;
-            position: fixed;
-            background-color: rgba(0, 0, 0, .7);
-            text-align: center;
-            /** skjuler den **/
-            display: none;
+        @media only screen and (max-width: 830px) {
+            .ret img {
+                width: 100%
+            }
 
+            .retContainer {
+                grid-template-columns: 1fr;
+            }
         }
 
-        #modal-content {
-            width: 70vw;
-            height: 70vh;
-            background-color: rgba(250, 250, 250, 1);
-            margin: auto;
+        @media only screen and (max-width: 425px) {
+            .ret img {
+                width: 100%
+            }
 
+            .retContainer {
+                grid-template-columns: 1fr;
+            }
         }
 
-        #modal.vis {
-            display: block;
+        ;
 
-        }
     </style>
 </head>
 
 <body>
-
-    <section id="modal">
-        <button>Close</button>
-        <div id="modal-content">
-            <h2 class="modal-navn"></h2>
-            <img class="modal-billede" src="" alt="">
-        </div>
-    </section>
-
     <header>
-
-        <h1></h1>
+        <h3>Bistro Babushka</h3>
+        <h1>Menu</h1>
         <nav>
-
+            <button class="menu-item" data-kategori="alle">Alle retter</button>
+            <button class="menu-item" data-kategori="forretter">forretter</button>
+            <button class="menu-item" data-kategori="hovedretter">hovedretter</button>
+            <button class="menu-item" data-kategori="desserter">desserter</button>
+            <button class="menu-item" data-kategori="sideorders">sideorders</button>
+            <button class="menu-item" data-kategori="drikkevarer">drikkevarer</button>
         </nav>
-
     </header>
-    <main class="container">
-        <section class="data-container">
 
-            <article class="person">
-                <h2>HEj</h2>
-                <img src="" alt=""><br>
-                status: <span class="data-civilstatus"></span><br>
-                github: <span class="data-github"></span><br>
-                tlf: <span class="data-tlf"></span><br>
-
-
+    <main class="retContainer">
+        <section class="singleContainer">
+            <article class="ret">
+                <h2 class="overskrift" data-navn></h2>
+                <img class="billede" data-billede src="" alt="">
+                <p class="langBeskrivelse" data-langbeskrivelse></p>
+                <p>Pris: <span class="pris" data-pris></span>, </p>
             </article>
-
-
-
-
         </section>
     </main>
-    <template class="data-template">
-
-    </template>
 
     <script>
         let urlParams = new URLSearchParams(window.location.search);
-        let github = urlParams.get("github");
-        console.log(github);
+        let id = urlParams.get("id");
 
-        let dest = document.querySelector(".data-container"),
-            personer,
-            civilFilter = "alle";
+        let dest = document.querySelector(".retContainer"),
+            retter, menuFilter = "alle";
         document.addEventListener("DOMContentLoaded", hentJson);
 
         async function hentJson() {
-            let myJson = await fetch("personliste.json");
-            personer = await myJson.json();
-            console.log(personer)
-            personer.sort((a, b) => {
-                return a.alder - b.alder
-            });
-            console.log(personer)
-            visPersoner();
+            let jsonData = await fetch("menu.json");
+            retter = await jsonData.json();
+            visRetter();
         }
 
         document.querySelectorAll(".menu-item").forEach(knap => {
@@ -126,29 +129,27 @@
 
         function filtrering() {
             dest.textContent = "";
-            civilFilter = this.getAttribute("data-civilstatus");
-            visPerson();
+            menuFilter = this.getAttribute("data-kategori");
+            visRetter();
         }
 
-
-        function visPersoner() {
-
-
-            personer.forEach(person => {
-                if (person.github == github) {
-
-                    dest.querySelector("h2").textContent = person.navn;
-                    dest.querySelector("img").src = person.billede;
-
-
-
-                    dest.querySelector(".data-civilstatus").textContent = person.civilstatus;
-                    //placer klon i DOM
-
+        function visRetter() {
+            let dest = document.querySelector(".retContainer");
+            document.querySelector("header h1").textContent = menuFilter;
+            retter.forEach(ret => {
+                if (ret.id == id) {
+                    dest.querySelector("[data-navn]").textContent = ret.navn;
+                    dest.querySelector("[data-billede]").src = "imgs/small/" + ret.billede + "-sm.jpg";
+                    dest.querySelector("[data-langbeskrivelse]").textContent = ret.langbeskrivelse;
+                    dest.querySelector("[data-pris]").textContent = ret.pris;
                 }
-            })
+            });
         }
+
     </script>
+
+    <footer></footer>
+
 </body>
 
 </html>

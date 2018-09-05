@@ -24,6 +24,7 @@
             display: grid;
         }
 
+
         @media screen and (min-width:580px) {
             .data-container {
                 padding-left: 10%;
@@ -131,7 +132,7 @@
                     klon.querySelector("h2").textContent = person.navn;
                     klon.querySelector("img").src = person.billede;
                     klon.querySelector("img").addEventListener("click", () => {
-                        window.location.href = "single.html?github=" + person.github;
+                        window.location.href = "single.html?id=" + person.navn;
                     });
 
 
